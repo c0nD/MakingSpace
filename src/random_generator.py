@@ -1,17 +1,15 @@
 import random
-from panda3d.core import Color4
+import math
 
+# nodePath.setColor(r, g, b, a)
 
-def generate_random_color():
-    return Color4(random.random(), random.random(), random.random(), 1)
-
-
-def generate_random_red():
-    return Color4(random.random(), 0, 0, 1)
-
-def generate_random_green():
-    return Color4(0, random.random(), 0, 1)
-
-
-def generate_random_blue():
-    return Color4(0, 0, random.random(), 1)
+def generate_random_color() -> tuple:
+    """
+    Generates a random color.
+    returns a tuple representing the color.
+    """
+    r = random.random()
+    g = random.random()
+    b = random.random()
+    a = 1.0
+    return r, g, b, a
