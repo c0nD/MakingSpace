@@ -5,68 +5,71 @@ import math
 
 
 # https://discourse.panda3d.org/t/procedurally-generating-3d-models/14623/4
-def create_planet(radius=1.0) -> NodePath:
-    """
-    Generates a planet with the given radius and returns a NodePath representing the planet.
-    """
+class Planet:
 
-    format = GeomVertexFormat.getV3n3c4()
-    vdata = GeomVertexData("planet", format, Geom.UHDynamic)
+    def __init__(self, radius=1.0):
+        self.radius = radius
+        self.node = self.create()
 
-    vertex = GeomVertexWriter(vdata, "vertex")
-    normal = GeomVertexWriter(vdata, "normal")
-    color = GeomVertexWriter(vdata, "color")
 
-    num_segments = 32  # The more segments, the smoother the sphere
+    def create(self):
+        """
+        Generates a planet with the given radius and returns a NodePath representing the planet.
+        """
+        format = GeomVertexFormat.getV3n3c4()
+        vdata = GeomVertexData("planet", format, Geom.UHDynamic)
 
-    # Generate vertices
-    for i in range(num_segments + 1):
-        for j in range(num_segments + 1):
-            theta = (i / num_segments) * 2 * math.pi
-            phi = (j / num_segments) * math.pi
+        vertex = GeomVertexWriter(vdata, "vertex")
+        normal = GeomVertexWriter(vdata, "normal")
+        color = GeomVertexWriter(vdata, "color")
 
-            x = radius * math.sin(phi) * math.cos(theta)
-            y = radius * math.sin(phi) * math.sin(theta)
-            z = radius * math.cos(phi)
+        num_segments = 32  # The more segments, the smoother the sphere
 
-            vertex.addData3f(x, y, z)
-            normal.addData3f(x, y, z)  # Assuming sphere centered at origin; normals are the same as vertices
-            color.addData4f(generate_random_color())
+        # Generate vertices
+        for i in range(num_segments + 1):
+            for j in range(num_segments + 1):
+                theta = (i / num_segments) * 2 * math.pi
+                phi = (j / num_segments) * math.pi
 
-    # Generate triangles
-    prim = GeomTriangles(Geom.UHDynamic)
+                x = self.radius * math.sin(phi) * math.cos(theta)
+                y = self.radius * math.sin(phi) * math.sin(theta)
+                z = self.radius * math.cos(phi)
 
-    for i in range(num_segments):
-        for j in range(num_segments):
-            next_i = (i + 1)
-            next_j = (j + 1)
+                vertex.addData3f(x, y, z)
+                normal.addData3f(x, y, z)  # Assuming sphere centered at origin; normals are the same as vertices
+                color.addData4f(generate_random_color())
 
-            i0 = i * (num_segments + 1) + j
-            i1 = i * (num_segments + 1) + next_j
-            i2 = next_i * (num_segments + 1) + j
-            i3 = next_i * (num_segments + 1) + next_j
+        # Generate triangles
+        prim = GeomTriangles(Geom.UHDynamic)
 
-            prim.addVertices(i0, i2, i1)
-            prim.addVertices(i1, i2, i3)
+        for i in range(num_segments):
+            for j in range(num_segments):
+                next_i = (i + 1)
+                next_j = (j + 1)
 
-    prim.closePrimitive()
-    geom = Geom(vdata)
-    geom.addPrimitive(prim)
-    node = GeomNode("planet")
-    node.addGeom(geom)
+                i0 = i * (num_segments + 1) + j
+                i1 = i * (num_segments + 1) + next_j
+                i2 = next_i * (num_segments + 1) + j
+                i3 = next_i * (num_segments + 1) + next_j
 
-    return NodePath(node)
+                prim.addVertices(i0, i2, i1)
+                prim.addVertices(i1, i2, i3)
 
+        prim.closePrimitive()
+        geom = Geom(vdata)
+        geom.addPrimitive(prim)
+        node = GeomNode("planet")
+        node.addGeom(geom)
+
+        return NodePath(node)
 
 
 class PlanetApp(ShowBase):
-    
     def __init__(self):
         super().__init__()
-        planet = create_planet(2.0)
+        planet = Planet(2.0).node
         planet.reparentTo(self.render)
         planet.setPos(0,50,0)
-
 
 if __name__ == "__main__":
     app = PlanetApp()
