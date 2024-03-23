@@ -1,5 +1,5 @@
 ## Making Space
-An AppHack project by **Colin Tiller**
+An AppalHack project by **Colin Tiller**
 
 ## Requirements
 Download requirements with the following:
