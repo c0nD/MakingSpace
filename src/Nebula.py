@@ -92,7 +92,6 @@ class Nebula:
         start_color = np.array([0.5, 0.0, 0.5, 1.0])  # Purple
         end_color = np.array([0.0, 0.0, 1.0, 1.0])    # Blue
 
-        # Interpolate between the start and end colors based on the factor
         color = (1 - factor) * start_color + factor * end_color
         return tuple(color)
 
@@ -105,19 +104,14 @@ class NebulaApp(ShowBase):
 
         # Set a darker background to contrast with the nebula
         base.setBackgroundColor(0, 0, 0)
-
-        # Create a nebula instance and reparent it to the render graph
         self.nebula_instance = Nebula(scale=0.3, num_arms=5, points_per_arm=1000, thickness=0.7)
         nebula_node = self.nebula_instance.node
         nebula_node.reparentTo(self.render)
 
-        # Set up some ambient lighting
         ambient_light = AmbientLight('ambient')
         ambient_light.setColor((0.2, 0.2, 0.2, 1))
         ambient_light_np = self.render.attachNewNode(ambient_light)
         self.render.setLight(ambient_light_np)
-
-        # Set up camera position
         self.camera.setPos(0, 0, 0)
 
 
