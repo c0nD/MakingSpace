@@ -4,9 +4,8 @@ from panda3d.core import (NodePath, GeomNode, Geom, GeomVertexFormat, GeomVertex
 from direct.showbase.ShowBase import ShowBase
 from direct.filter.CommonFilters import CommonFilters
 from direct.task import Task
-from random_generator import generate_random_star_color
 import random
-import math
+import numpy as np
 from panda3d.core import CardMaker
 from Planet import Planet
 
@@ -21,7 +20,7 @@ class Star:
     def animate_light(self, task):
         # Sine wave for smooth pulsation
         pulsation_speed = 0.5  # adjust for faster or slower pulsation
-        brightness = (math.sin(task.time * pulsation_speed) + 1) / 2  # normalized between 0 and 1
+        brightness = (np.sin(task.time * pulsation_speed) + 1) / 2  # normalized between 0 and 1
 
         # Update the light color and intensity
         light_color = Vec4(brightness, brightness, brightness, 1)
@@ -42,12 +41,12 @@ class Star:
 
         for i in range(num_segments + 1):
             for j in range(num_segments + 1):
-                theta = (i / num_segments) * 2 * math.pi
-                phi = (j / num_segments) * math.pi
+                theta = (i / num_segments) * 2 * np.pi
+                phi = (j / num_segments) * np.pi
 
-                x = self.radius * math.sin(phi) * math.cos(theta)
-                y = self.radius * math.sin(phi) * math.sin(theta)
-                z = self.radius * math.cos(phi)
+                x = self.radius * np.sin(phi) * np.cos(theta)
+                y = self.radius * np.sin(phi) * np.sin(theta)
+                z = self.radius * np.cos(phi)
 
                 vertex.addData3f(x, y, z)
                 normal.addData3f(x, y, z)
@@ -92,6 +91,14 @@ class Star:
         star_node.setLight(star_light_node)
 
         return star_node
+    
+    
+def generate_random_star_color():
+    r = random.uniform(0.8, 1.0)
+    g = random.uniform(0.8, 1.0)
+    b = random.uniform(0.8, 1.0)
+    return r, g, b, 1.0
+
 
 class StarApp(ShowBase):
     def __init__(self):

@@ -1,6 +1,6 @@
+import random
 from panda3d.core import NodePath, GeomNode, Geom, GeomVertexFormat, GeomVertexData, GeomVertexWriter, GeomTriangles
 from direct.showbase.ShowBase import ShowBase
-from random_generator import generate_random_color
 import math
 
 
@@ -64,6 +64,13 @@ class Planet:
         node.addGeom(geom)
 
         return NodePath(node)
+        
+def generate_random_color() -> tuple:
+    r = random.random()
+    g = random.random()
+    b = random.random()
+    a = 1.0
+    return r, g, b, a
 
 
 class PlanetApp(ShowBase):
